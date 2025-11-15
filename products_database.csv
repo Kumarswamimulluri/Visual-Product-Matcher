@@ -1,0 +1,61 @@
+id,name,category,price,description,imageUrl
+1,Blue Denim Jeans,Fashion,49.99,Classic blue jeans,https://images.unsplash.com/photo-1542272604-787c62d465d1?w=300&h=300&fit=crop
+2,Black T-Shirt,Fashion,19.99,Solid black t-shirt,https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop
+3,White Sneakers,Fashion,89.99,Classic white sneakers,https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop
+4,Red Hoodie,Fashion,59.99,Warm red hoodie,https://images.unsplash.com/photo-1556821552-5eb066c57e15?w=300&h=300&fit=crop
+5,Summer Dress,Fashion,69.99,Flowy summer dress,https://images.unsplash.com/photo-1595777712802-13d1d19beb80?w=300&h=300&fit=crop
+6,Wireless Headphones,Electronics,79.99,Bluetooth wireless headphones,https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop
+7,Smartphone Stand,Electronics,14.99,Adjustable phone stand,https://images.unsplash.com/photo-1605559424843-9e4c3ca4b7f1?w=300&h=300&fit=crop
+8,Laptop Bag,Electronics,49.99,Professional laptop bag,https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop
+9,USB-C Cable,Electronics,9.99,High-speed USB-C cable,https://images.unsplash.com/photo-1625948515291-69613efd103f?w=300&h=300&fit=crop
+10,Portable Charger,Electronics,34.99,20000mAh power bank,https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=300&h=300&fit=crop
+11,Coffee Mug,Home,12.99,Ceramic coffee mug,https://images.unsplash.com/photo-1514432324607-2e467f4af445?w=300&h=300&fit=crop
+12,Throw Pillow,Home,24.99,Soft decorative pillow,https://images.unsplash.com/photo-1584622181563-430f63602d4b?w=300&h=300&fit=crop
+13,Wall Clock,Home,34.99,Modern wall clock,https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=300&h=300&fit=crop
+14,Table Lamp,Home,44.99,LED desk lamp,https://images.unsplash.com/photo-1565636192335-14c46fa1120f?w=300&h=300&fit=crop
+15,Bedding Set,Home,89.99,Queen size bedding,https://images.unsplash.com/photo-1540932239986-f858b3fa7141?w=300&h=300&fit=crop
+16,Fiction Novel,Books,14.99,Bestseller fiction book,https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=300&fit=crop
+17,Self-Help Book,Books,16.99,Personal development guide,https://images.unsplash.com/photo-1507842072343-583f20270319?w=300&h=300&fit=crop
+18,Technical Manual,Books,49.99,Programming guide,https://images.unsplash.com/photo-1495446815901-a7297e3ece00?w=300&h=300&fit=crop
+19,Children's Book,Books,9.99,Illustrated kids book,https://images.unsplash.com/photo-1514306688772-aadda329cc5d?w=300&h=300&fit=crop
+20,Art Book,Books,34.99,Contemporary art collection,https://images.unsplash.com/photo-1516979187457-635ffe35ff85?w=300&h=300&fit=crop
+21,Running Shoes,Sports,129.99,Professional running shoes,https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop
+22,Yoga Mat,Sports,24.99,Premium yoga mat,https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=300&h=300&fit=crop
+23,Dumbbell Set,Sports,79.99,Adjustable dumbbells,https://images.unsplash.com/photo-1517836357463-d25ddfcbf042?w=300&h=300&fit=crop
+24,Water Bottle,Sports,19.99,Insulated water bottle,https://images.unsplash.com/photo-1602143407151-7111542de6e9?w=300&h=300&fit=crop
+25,Bicycle Helmet,Sports,59.99,Safety bike helmet,https://images.unsplash.com/photo-1578496781514-32156ef59f04?w=300&h=300&fit=crop
+26,Face Moisturizer,Beauty,29.99,Hydrating face cream,https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=300&h=300&fit=crop
+27,Shampoo Bottle,Beauty,12.99,Organic shampoo,https://images.unsplash.com/photo-1585563047346-8b3a6b7e0c3d?w=300&h=300&fit=crop
+28,Sunscreen SPF 50,Beauty,19.99,UV protection cream,https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=300&h=300&fit=crop
+29,Makeup Brush Set,Beauty,24.99,Professional brush collection,https://images.unsplash.com/photo-1585232341710-4b6af60904b9?w=300&h=300&fit=crop
+30,Hair Dryer,Beauty,69.99,Professional hair dryer,https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&h=300&fit=crop
+31,Board Game,Toys,34.99,Strategy board game,https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=300&h=300&fit=crop
+32,LEGO Set,Toys,79.99,Building block set,https://images.unsplash.com/photo-1551250267-94d440642117?w=300&h=300&fit=crop
+33,Action Figure,Toys,24.99,Collectible action figure,https://images.unsplash.com/photo-1592078615290-033ee584e267?w=300&h=300&fit=crop
+34,Puzzle,Toys,14.99,1000-piece jigsaw puzzle,https://images.unsplash.com/photo-1540531741f39db1e5dd90e9b37d96c38e7a12b9?w=300&h=300&fit=crop
+35,Remote Control Car,Toys,49.99,Racing RC car,https://images.unsplash.com/photo-1594787318286-3d835c1cab83?w=300&h=300&fit=crop
+36,Gold Watch,Jewelry,199.99,Classic gold watch,https://images.unsplash.com/photo-1523170335684-f042b6f56efc?w=300&h=300&fit=crop
+37,Silver Necklace,Jewelry,79.99,Elegant silver chain,https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&h=300&fit=crop
+38,Diamond Ring,Jewelry,299.99,Diamond engagement ring,https://images.unsplash.com/photo-1597865192665-ba8e2f05dc4d?w=300&h=300&fit=crop
+39,Pearl Earrings,Jewelry,89.99,Classic pearl studs,https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&h=300&fit=crop
+40,Bracelet,Jewelry,49.99,Beaded bracelet,https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=300&h=300&fit=crop
+41,Dog Collar,Pets,19.99,Adjustable dog collar,https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&h=300&fit=crop
+42,Cat Bed,Pets,34.99,Cozy cat bed,https://images.unsplash.com/photo-1611003228941-98852ba62227?w=300&h=300&fit=crop
+43,Dog Toys Bundle,Pets,24.99,Set of dog toys,https://images.unsplash.com/photo-1535241750d7f75dc4d426651b92c0fc3b87cf13f?w=300&h=300&fit=crop
+44,Pet Food Bowl,Pets,14.99,Stainless steel bowl,https://images.unsplash.com/photo-1537151608828-8661a20b6040?w=300&h=300&fit=crop
+45,Bird Cage,Pets,89.99,Large bird cage,https://images.unsplash.com/photo-1608848461950-0fed8c9c169d?w=300&h=300&fit=crop
+46,Desk Organizer,Office,24.99,Desktop organizer,https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop
+47,Notebook,Office,9.99,200-page notebook,https://images.unsplash.com/photo-1577720643272-265f434b2f1d?w=300&h=300&fit=crop
+48,Stapler,Office,14.99,Heavy duty stapler,https://images.unsplash.com/photo-1584622181563-430f63602d4b?w=300&h=300&fit=crop
+49,Monitor Stand,Office,49.99,Adjustable monitor riser,https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop
+50,Desk Lamp,Office,39.99,LED desk light,https://images.unsplash.com/photo-1565636192335-14c46fa1120f?w=300&h=300&fit=crop
+51,Coffee Beans,Food,14.99,Premium coffee beans,https://images.unsplash.com/photo-1559056199-641a0ac8b3f7?w=300&h=300&fit=crop
+52,Tea Set,Food,29.99,Ceramic tea set,https://images.unsplash.com/photo-1567318735868-e71b99932e29?w=300&h=300&fit=crop
+53,Honey Jar,Food,12.99,Organic honey,https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&h=300&fit=crop
+54,Olive Oil Bottle,Food,19.99,Extra virgin olive oil,https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=300&h=300&fit=crop
+55,Pasta Box,Food,4.99,Artisan pasta,https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=300&h=300&fit=crop
+56,Car Phone Mount,Auto,19.99,Dashboard phone holder,https://images.unsplash.com/photo-1605559424843-9e4c3ca4b7f1?w=300&h=300&fit=crop
+57,Floor Mats,Auto,34.99,Car floor mats,https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=300&h=300&fit=crop
+58,Car Air Freshener,Auto,9.99,Scent air freshener,https://images.unsplash.com/photo-1617469767537-b85b6b773b40?w=300&h=300&fit=crop
+59,Steering Wheel Cover,Auto,24.99,Leather wheel cover,https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=300&h=300&fit=crop
+60,Car Organizer,Auto,29.99,Trunk organizer,https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=300&h=300&fit=crop

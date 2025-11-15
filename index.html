@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Product Matcher - Find Similar Products</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="container">
+        <div class="header-content">
+          <h1 class="header-title">
+            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            Visual Product Matcher
+          </h1>
+          <p class="header-subtitle">Find visually similar products using AI</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <div class="container">
+        <!-- Upload Section -->
+        <section id="uploadSection" class="upload-section">
+          <div class="upload-card">
+            <h2 class="section-title">Upload an Image</h2>
+            <p class="section-description">Upload a product image or paste an image URL to find similar items</p>
+            
+            <!-- File Upload -->
+            <div id="dropZone" class="drop-zone">
+              <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              <p class="upload-text">Drag &amp; drop an image here</p>
+              <p class="upload-subtext">or</p>
+              <label for="fileInput" class="btn btn--primary">Choose File</label>
+              <input type="file" id="fileInput" accept="image/*" style="display: none;">
+              <p class="upload-hint">Supports: JPG, PNG, WebP</p>
+            </div>
+
+            <!-- URL Input -->
+            <div class="url-input-section">
+              <div class="divider">
+                <span>OR</span>
+              </div>
+              <div class="url-input-group">
+                <input type="text" id="urlInput" class="form-control" placeholder="Paste image URL here...">
+                <button id="urlSubmit" class="btn btn--primary">Load Image</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model Loading -->
+          <div id="modelLoading" class="model-loading" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Loading AI model...</p>
+          </div>
+        </section>
+
+        <!-- Processing Section -->
+        <section id="processingSection" class="processing-section" style="display: none;">
+          <div class="processing-card">
+            <div class="loading-spinner"></div>
+            <h3>Processing Image...</h3>
+            <p id="processingStatus">Analyzing visual features</p>
+          </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section" style="display: none;">
+          <!-- Uploaded Image Preview -->
+          <div class="uploaded-preview">
+            <h3 class="preview-title">Your Image</h3>
+            <img id="uploadedImage" class="uploaded-img" alt="Uploaded product">
+            <button id="newSearchBtn" class="btn btn--outline btn--sm">Upload New Image</button>
+          </div>
+
+          <!-- Filters and Controls -->
+          <div class="controls-panel">
+            <div class="controls-header">
+              <h3 class="controls-title">Similar Products <span id="resultCount" class="result-count"></span></h3>
+            </div>
+            
+            <div class="filters-grid">
+              <!-- Similarity Threshold -->
+              <div class="filter-group">
+                <label class="filter-label">
+                  Similarity: <span id="similarityValue">0</span>%+
+                </label>
+                <input type="range" id="similaritySlider" class="slider" min="0" max="100" value="0">
+              </div>
+
+              <!-- Category Filter -->
+              <div class="filter-group">
+                <label class="filter-label">Category</label>
+                <select id="categoryFilter" class="form-control">
+                  <option value="">All Categories</option>
+                </select>
+              </div>
+
+              <!-- Price Range -->
+              <div class="filter-group">
+                <label class="filter-label">Min Price ($)</label>
+                <input type="number" id="minPrice" class="form-control" placeholder="0" min="0">
+              </div>
+              
+              <div class="filter-group">
+                <label class="filter-label">Max Price ($)</label>
+                <input type="number" id="maxPrice" class="form-control" placeholder="999" min="0">
+              </div>
+
+              <!-- Sort Options -->
+              <div class="filter-group">
+                <label class="filter-label">Sort By</label>
+                <select id="sortBy" class="form-control">
+                  <option value="similarity">Similarity (High to Low)</option>
+                  <option value="price-asc">Price (Low to High)</option>
+                  <option value="price-desc">Price (High to Low)</option>
+                  <option value="category">Category</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <button id="resetFilters" class="btn btn--outline btn--full-width">Reset Filters</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products Grid -->
+          <div id="productsGrid" class="products-grid"></div>
+
+          <!-- No Results -->
+          <div id="noResults" class="no-results" style="display: none;">
+            <svg class="no-results-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M8 15h8M9 9h.01M15 9h.01"></path>
+            </svg>
+            <h3>No Similar Products Found</h3>
+            <p>Try adjusting your filters or upload a different image</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal" style="display: none;">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <button class="modal-close" id="closeModal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        <div class="modal-body">
+          <div class="modal-image-container">
+            <img id="modalImage" class="modal-image" alt="Product">
+          </div>
+          <div class="modal-info">
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <div class="modal-meta">
+              <span id="modalCategory" class="category-badge"></span>
+              <span id="modalPrice" class="modal-price"></span>
+            </div>
+            <div class="similarity-info">
+              <div class="similarity-label">Similarity Score</div>
+              <div class="similarity-bar-container">
+                <div id="modalSimilarityBar" class="similarity-bar"></div>
+              </div>
+              <div id="modalSimilarityText" class="similarity-percentage"></div>
+            </div>
+            <p id="modalDescription" class="modal-description"></p>
+            <div class="modal-actions">
+              <button class="btn btn--primary btn--lg btn--full-width">Add to Cart</button>
+              <button id="shareBtn" class="btn btn--outline btn--lg btn--full-width">Share Product</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" style="display: none;"></div>
+  </div>
+
+  <style>
+    :root {
+      --color-primary: #2563eb;
+      --color-primary-hover: #1d4ed8;
+      --color-primary-active: #1e40af;
+      --color-secondary: #64748b;
+      --color-success: #10b981;
+      --color-error: #ef4444;
+      --color-warning: #f59e0b;
+      --color-background: #f8fafc;
+      --color-surface: #ffffff;
+      --color-text: #0f172a;
+      --color-text-secondary: #64748b;
+      --color-border: #e2e8f0;
+      --color-hover: #f1f5f9;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-background);
+      color: var(--color-text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    /* Header */
+    .header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-lg) 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-content {
+      text-align: center;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .header-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .header-subtitle {
+      color: var(--color-text-secondary);
+      font-size: 14px;
+    }
+
+    /* Main */
+    .main {
+      padding: var(--space-xl) 0;
+      min-height: calc(100vh - 120px);
+    }
+
+    /* Upload Section */
+    .upload-section {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .upload-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+      text-align: center;
+    }
+
+    .section-description {
+      color: var(--color-text-secondary);
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-xl);
+      text-align: center;
+      transition: all 0.3s ease;
+      background: var(--color-background);
+    }
+
+    .drop-zone.drag-over {
+      border-color: var(--color-primary);
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .upload-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-md);
+    }
+
+    .upload-text {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: var(--space-xs);
+    }
+
+    .upload-subtext {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-md);
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-top: var(--space-md);
+    }
+
+    .url-input-section {
+      margin-top: var(--space-lg);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: var(--space-lg) 0;
+      color: var(--color-text-secondary);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .divider span {
+      padding: 0 var(--space-md);
+      font-size: 14px;
+    }
+
+    .url-input-group {
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+
+    .btn--primary {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .btn--primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    .btn--primary:active {
+      background: var(--color-primary-active);
+    }
+
+    .btn--outline {
+      background: transparent;
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+
+    .btn--outline:hover {
+      background: var(--color-hover);
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    .btn--lg {
+      padding: 12px 24px;
+      font-size: 16px;
+    }
+
+    .btn--full-width {
+      width: 100%;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Form Controls */
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Loading */
+    .model-loading,
+    .processing-section {
+      text-align: center;
+      padding: var(--space-xl);
+    }
+
+    .processing-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-md);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--color-border);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto var(--space-md);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Results Section */
+    .results-section {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .uploaded-preview {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+      border: 1px solid var(--color-border);
+    }
+
+    .preview-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+    }
+
+    .uploaded-img {
+      max-width: 300px;
+      max-height: 300px;
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-md);
+      object-fit: cover;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .controls-panel {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .controls-header {
+      margin-bottom: var(--space-lg);
+    }
+
+    .controls-title {
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .result-count {
+      background: var(--color-primary);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .filter-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--color-border);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Products Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .product-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid var(--color-border);
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      background: var(--color-background);
+    }
+
+    .product-body {
+      padding: var(--space-md);
+    }
+
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: var(--space-sm);
+      gap: var(--space-sm);
+    }
+
+    .product-name {
+      font-size: 16px;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--color-primary);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .product-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .similarity-section {
+      margin-top: var(--space-md);
+    }
+
+    .similarity-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--space-xs);
+    }
+
+    .similarity-text {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+    }
+
+    .similarity-percentage {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-success);
+    }
+
+    .similarity-bar-container {
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .similarity-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-success), var(--color-primary));
+      transition: width 0.3s ease;
+    }
+
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: var(--space-xl);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .no-results-icon {
+      width: 64px;
+      height: 64px;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-md);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md);
+    }
+
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      position: relative;
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-surface);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--color-hover);
+    }
+
+    .modal-close svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+      padding: var(--space-xl);
+    }
+
+    .modal-image-container {
+      position: sticky;
+      top: 0;
+    }
+
+    .modal-image {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+    }
+
+    .modal-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .modal-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .modal-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .similarity-info {
+      padding: var(--space-md);
+      background: var(--color-background);
+      border-radius: var(--radius-md);
+    }
+
+    .similarity-label {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .modal-description {
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      margin-top: auto;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: var(--space-lg);
+      right: var(--space-lg);
+      background: var(--color-text);
+      color: white;
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      z-index: 2000;
+      animation: slideIn 0.3s ease;
+    }
+
+    .toast.success {
+      background: var(--color-success);
+    }
+
+    .toast.error {
+      background: var(--color-error);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-title {
+        font-size: 22px;
+      }
+
+      .header-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .upload-card {
+        padding: var(--space-lg);
+      }
+
+      .url-input-group {
+        flex-direction: column;
+      }
+
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-body {
+        grid-template-columns: 1fr;
+      }
+
+      .uploaded-img {
+        max-width: 200px;
+        max-height: 200px;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+
+  <script src="app.js"></script>
+</body>
+</html>
